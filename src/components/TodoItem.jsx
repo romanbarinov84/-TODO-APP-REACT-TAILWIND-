@@ -1,4 +1,7 @@
-const TodoItem = ({ todo , onDelete }) => {
+import { useState } from "react";
+
+const TodoItem = ({ todo, onDelete }) => {
+  const [isCompleted, setIsCompleted] = useState(false);
   return (
     <div
       key={todo.id}
@@ -6,20 +9,36 @@ const TodoItem = ({ todo , onDelete }) => {
                        hover:border-indigo-500 hover:bg-pink-700 hover:text-white focus:ring-2 focus:ring-indigo-500/30
                        outline-none transition"
     >
-      <span>{todo.text}</span>
+      <span
+        className={`flex-1 ${
+          isCompleted ? "line-through text-gray-400" : "text-gray-700"
+        }`}
+      >
+        {todo.text}
+      </span>
       <div className="flex gap-2">
-        <button className="rounded-2xl bg-green-300 px-2 py-1
+        <button
+          className="rounded-2xl bg-green-300 px-2 py-1
                        text-white font-semibold
                        hover:bg-green-700
                        active:scale-95
                        focus:ring-2 focus:ring-indigo-500/40
-                       transition">Сделано</button>
-        <button className="rounded-2xl bg-red-300 px-2 py-1
+                       transition"
+          onClick={() => setIsCompleted(!isCompleted)}
+        >
+          Сделано
+        </button>
+        <button
+          className="rounded-2xl bg-red-300 px-2 py-1
                        text-white font-semibold
                        hover:bg-red-700
                        active:scale-95
                        focus:ring-2 focus:ring-indigo-500/40
-                       transition" onClick={() => onDelete(todo.id)}>Удалить</button>
+                       transition"
+          onClick={() => onDelete(todo.id)}
+        >
+          Удалить
+        </button>
       </div>
     </div>
   );

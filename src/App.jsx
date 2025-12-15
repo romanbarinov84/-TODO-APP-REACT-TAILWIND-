@@ -1,35 +1,34 @@
-import { useState } from "react";
-import TodoItem from "../src/components/TodoItem"
+import { useEffect, useState } from "react";
+import TodoItem from "../src/components/TodoItem";
 
 import "./App.css";
 
 function App() {
-  const initialTodos = [
-    { id: 1, text: "Сделать кофе" },
-    { id: 2, text: "Одеться" },
-    { id: 3, text: "Пойти на работу" },
-  ];
+   const [todos, setTodos] = useState(() => {
+    const saved = localStorage.getItem("todos");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  const [todos, setTodos] = useState(initialTodos);
   const [text, setText] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = () => {
     if (!text.trim()) return;
 
-    setTodos([
-      ...todos,
-      {
-        id: Date.now(),
-        text,
-      },
+    setTodos((prev) => [
+      ...prev,
+      { id: Date.now(), text, completed: false },
     ]);
 
     setText("");
   };
 
   const onDelete = (id) => {
-     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id))
-  }
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center pt-10">
@@ -65,7 +64,7 @@ function App() {
 
         <ul className="space-y-2">
           {todos.map((todo) => (
-           <TodoItem key={todo.id} todo={todo} onDelete={onDelete}/>
+            <TodoItem key={todo.id} todo={todo} onDelete={onDelete} />
           ))}
         </ul>
       </div>
